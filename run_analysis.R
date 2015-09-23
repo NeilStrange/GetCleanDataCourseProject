@@ -207,7 +207,7 @@ library(reshape2)
   }
   
   print("---> subsetting columns...")
-  x_data_meanstd <- x_data[keep]
+  x_data <- x_data[keep]
 
 # 8 - deconstruct the measurement columns into one measure per row ------------
 
@@ -223,13 +223,12 @@ library(reshape2)
   
   print("---> adding an index column...")
   # Add an index column to the data set.
-  observation_number <- c(1:nrow(x_data_meanstd))
-  x_data_meanstd <- cbind(observation_number, x_data_meanstd)
+  observation_number <- c(1:nrow(x_data))
+  x_data <- cbind(observation_number, x_data)
     
   print("---> melt measures into a narrow table...")
   # reshape x_data_meanstd, replace multiple measure columns with one
-  x_data_melt <- reshape2::melt(x_data_meanstd, c(1:3), c(4:89), 
-                                  variable.factor = TRUE)
+  x_data_melt <- reshape2::melt(x_data,c(1:3), c(4:89), variable.factor = TRUE)
 
 # 9 - create a data set with average of each variable, activity and subject ---
 

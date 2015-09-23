@@ -40,14 +40,32 @@ The structure includes a number of subdirectories and files:
 * *README.txt* - a description of the experimental source of the data, how measurements were made, the directories and files that comprise the data set and information about licensing 
 
 Measurements were made for a number of subjects. The measures were divided into two sets - a test data set and a training data set, each set has its own subdirectory - \test and \train, and they contain further subdirectories and files. The \test and \train directories have identical structures, the table below describes the \test directory contents, however it is applicable to \train as well, just substitute file names using '_test' with '_train':  
-* *X_test* - contains measurements, one row per measurement event, each row with 561 observations labelled V1, V2, ...V561
+* *X_test* - contains measurements or calculations based on these measurements, one row per observation event, each row with 561 observations labelled V1, V2, ...V561
 * *y_test* - contains information about activities performed, as integers 1-6 (see features.txt to decode these), there is one entry in y_test for each entry in X_test and these correspond - so the first entry in y_test is the activity underway for the first measurement set in X_test
 * *subject_test* - contains information about the subject being measured, identified as an integer, there is one entry in subject_test for each entry in X_test and these correspond - so the first entry in subject_test is the subject of the first measurement set in X_test
 * *\Inertial Signals* - a subdirectory holding low-level body accelerator and body gyro data over a number of files, this is too low a level for use in this project and can be ignored  
 
 ### Target Data
+There are two 
+* x_data_melt - this is a narrow tidy data set holding data for all mean and standard deviation measurements
+* x_cast - is a summary table holding the mean of each measurement's values for each subject and activity combination, x_cast is printed by the script as a tidy_data.txt file
 
-### Processing Steps
+**x_data_melt**
+A data frame, 5 columns wide, with 885,174 rows
+The columns are:
+* observation_number: integer, the row number from the original merged training and test data set, it ties together each of the 86 measurements made in a single observation
+* Subject: integer, in the range 1:30, identifying the person who was the subject of the measurement
+* Activity, character, one of 6 values (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING)
+* variable: character, the name of a variable, one of 86 measurements (see below for the list of variables)
+* value: numeric, the value of that variable, all values are in the range -1 to +1, having been normalised
+
+**x_cast**
+A data frame, 88 columns wide, 180 rows (all combinations of 6 activities x 30 subjects)
+* Subject: integer, in the range 1:30, identifying the person who was the subject of the measurement
+* Activity, character, one of 6 values (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING)
+* Columns 3:88, numeric, each column contains data about one variable, the data is the mean of all values for that variable for each subject and activity combination
+
+## Processing Steps
 The script contains a number of steps:  
 
 **step 1 - initial preparation**
@@ -88,6 +106,7 @@ The script contains a number of steps:
 * Subjects are numbered 1:30, we don't know any more about them from the data provided.
 * The subject_test and subject_train data sets contain the same number of rows as the x_test and x_train data sets, each row in subject_test and subject_train corresponds to the same number row in x_test and x_train.
 * Read the subject_test and subject_train data sets into data frames.
+* Each is located in its own subdirectory so use the pre-set subdirectory values to locate the files.
 * Column bind the data sets to x_test and x_train.
 * Set the new column name to 'Subject'.
 
@@ -99,17 +118,29 @@ The script contains a number of steps:
 * The exercise asks for an extract of just the columns that hold mean and standard deviation values.
 * To find which columns to keep:
     + use the features vector previously loaded, this holds the names of each measurement column
-    + some of these hold text fragments 'mean' or 'std' - which we should keep
+    + some of these hold text fragments 'mean' or 'std' - these are the columns we should keep
     + build a logical vector ('keep') the same length as the features vector
     + store TRUE in keep if the feature includes the text fragments 'mean' or 'std', otherwise store FALSE - look for this text within the feature names using the grepl() function
-* Use the keep vector to drop any columns we don't need in x_data
-* Note that columns 1-2 contain subject and activity data and are retained
+* Use the keep vector to drop any columns we don't need from x_data
+* Note that columns 1-2 contain subject and activity data and are retained, so we explicity set keep[1:2] as TRUE
 * This reduces the 561 measurement columns down to 87.
 
 **step 8 - melt the data set, reduce 87 measurement columns to a variable and value column**
-* Each row contains 87 measures plus a subject and activity column. One row is in place for each measurement. To retain the linkage between a measurement and the 87 measures prepend an index to the data set before melting, this index identifies the particular measurement, ensuring it isn't lost, and allows original data to be reconstructed.
+* Each row contains 87 measures plus a subject and activity column. 
+* One row is in place for each measurement. 
+* To tidy the data further we will reduce the 87 measures into two columns - 'variable' and 'value' using the melt() function
+* There is an additional piece of data we need to keep - each row is created as a result of a single observation, all 87 measures are made at the same time and they are linked in some way, they are not totally independent of each other
+* The raw data set does not explicity hold an observation id, this is implicit in the row number
+* To retain information about the observation we need to add a further column to x_data, an index, before using melt()
+    + create an integer vector from 1 to the number of rows in x_data
+    + column bind the vector to x_data and name the column 'observation_number'
+* Use melt to reduce the data set to 5 columns, observation_id, subject, activity, variable, value.
+* Store the result in 'x_data_melt', a data frame.
 
 **step 9 - calculate means for each measure by subject and activity**
+* The dcast() function works with melt() data sets to calculate this data.
+* Make 'Subject' and 'Activity' indexes of the calculation.
+* Call dcast() with the function 'mean' and store the result in 'x_cast' data frame.
 * 
 
 **step 10 - print the tidy data set** 
@@ -117,7 +148,7 @@ The script contains a number of steps:
 * Use the row.name = FALSE setting
 
 **step 11 - restore the environment**
-* Reset the environment to where it was when the script started.
+* Reset the working directory to where it was when the script started.
 
 
 ## Description of Variables

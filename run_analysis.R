@@ -243,9 +243,11 @@ library(reshape2)
 # 10 - print the data set -----------------------------------------------------
   
   print("---> Step 10 ------------------------------------------")
-  print("---> print the results to the console...")
-  print(x_cast)  
-
+  print("---> print the results...")
+  setwd(old.wd)
+  write.table(x_cast, file = "tidy_data.txt", row.name = FALSE) 
+              
+              
 # 11 - reset the environment and exit
   print("---> Step 11 ------------------------------------------")
   print("---> resetting the environment...")

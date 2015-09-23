@@ -1,0 +1,64 @@
+CodeBook.md
+# Course Project, Getting and Cleaning Data
+***
+## Project Description
+This project prepares a tidy data set, from a specific set of input data that contains smartphone accelerometer data from 30 individuals.  
+author       | date        | input           | output 
+------------ | ----------- | --------------- | --------------- 
+Neil Strange | 21.Sep.2015 | A directory "UCI HAR Dataset" should be in the current working directory, containing accelerometer data from a number of subjects. A zip of this data is available from https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip. | One tidy data file is produced - for each subject and activity combination a list of the mean of each measurement.  
+## Dependencies
+This script loads and uses the following additional packages:  
+* dplyr, 0.4.3 or later
+* data.table, 1.9.4 or later 
+* reshape2, 1.4.1 or later
+## Interpretation of 'Tidy Data' for this Project
+Tidy data is 
+*Column Names are meaningful*: the data is scientific, the measurement names provided in the features file are appropriate for scientific use and are more meaningful than the original column names V1, V2... V561.  
+*Values are Substituted*: where activity codes 1..6 were used these are replaced with the corresponding strings set out in the activity_labels file, where 1 = WALKING, 2 = WALKING_UPSTAIRS, etc.  
+*The Data Set is Narrow*: the original data contains multiple measure columns, these can be reduced to two columns: variable and value, in order not to lose the fact that a number of measures were made at the same time, an extra column is added 'observation number' before melting the data set to retain the linkage between different observed measures.
+## Data Processing
+### Raw Source Data
+Source data is contained in a directory structure, the top level is named "UCI HAR Dataset".  
+The structure includes a number of subdirectories and files:  
+file/directory      | description
+------------------- | ---------------------------------------------------------
+\test               | a directory containing the test data set (see below)
+\train              | a directory containing the training data set (see below)
+activity_labels.txt | a list of labels used to describe activities, activity data is stored in the test/training data sets using an integer number (1-6), this file contains the corresponding lookup values, i.e. a value of 1 is a 'WALKING' activity. The assignment asks these labels to be substituted for the integers in the target tidy data set.
+features.txt        | a list of 561 measurements made by the sensor
+features_info.txt   | a description of how the measurements were made and how they are structured
+README.txt          | a description of the experimental source of the data, how measurements were made, the directories and files that comprise the data set and information about licensing  
+Measurements were made for a number of subjects. The measures were divided into two sets - a test data set and a training data set, each set has its own subdirectory - \test and \train, and they contain further subdirectories and files. The \test and \train directories have identical structures, the table below describes the \test directory contents, however it is applicable to \train as well, just substitute file names using '_test' with '_train':  
+file/directory      | description
+------------------- | ---------------------------------------------------------
+X_test              | contains measurements, one row per measurement event, each row with 561 observations labelled V1, V2, ...V561
+y_test              | contains information about activities performed, as integers 1-6 (see features.txt to decode these), there is one entry in y_test for each entry in X_test and these correspond - so the first entry in y_test is the activity underway for the first measurement set in X_test
+subject_test        | contains information about the subject being measured, identified as an integer, there is one entry in subject_test for each entry in X_test and these correspond - so the first entry in subject_test is the subject of the first measurement set in X_test
+\Inertial Signals   | low-level body accelerator and body gyro data over a number of files, this is too low a level for use in this project and can be ignored  
+### Target Data
+
+### Processing Steps
+The script contains a number of steps:  
+step | aim of step                 | notes 
+---- | --------------------------- | ---------------------------------------
+1    | initial preparation         | Verifies the working directory contains the data set and saves environment variables so they can be reset on exit.
+2    | read in the X_% data files  | Keep the files separate until they are ready to be merged.
+3    | rename the data file columns | Use a more user-friendly set of names taken from the features.txt file
+4    | append the y_% activity data | Create a new column in X_% and column bind the y_% activity data. Replace activity codes with the activity labels to make them readable.
+5    | append the subject_% data   | Create a new column in X_% and column bind the subject_% data.
+6    | merge the test and training data sets | Merge the data sets into X_data holding the combined set.
+7    | drop any non-mean or non-standard deviation measures | Build a logical vector that indicates if a feature includes the text fragments 'mean' or 'std' use the logical vector to drop any columns we don't need, note that columns 1-2 contain subject and activity data and are also retained. This reduces the 561 measurement columns down to 87.
+8    | melt the data set, reduce 87 measurement columns to a variable and value column. | Each row contains 87 measures plus a subject and activity column. One row is in place for each measurement. To retain the linkage between a measurement and the 87 measures prepend an index to the data set before melting, this index identifies the particular measurement, ensuring it isn't lost, and allows original data to be reconstructed.
+9    | calculate means for each measure by subject and activity | 
+10   | print the tidy data set      | Print the results to the console.
+11   | restore the environment      | Reset the environment to where it was when the script started.
+
+
+## Description of Variables
+
+## Sources
+
+
+
+
+

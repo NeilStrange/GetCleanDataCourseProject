@@ -3,14 +3,16 @@ CodeBook.md
 ***
 ## Project Description
 This project prepares a tidy data set, from a specific set of input data that contains smartphone accelerometer data from 30 individuals.  
-author       | date        | input           | output 
------------- | ----------- | --------------- | --------------- 
-Neil Strange | 21.Sep.2015 | A directory "UCI HAR Dataset" should be in the current working directory, containing accelerometer data from a number of subjects. A zip of this data is available from https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip. | One tidy data file is produced - for each subject and activity combination a list of the mean of each measurement.  
+
+author: Neil Strange
+date: 21.Sep.2015
+input: A directory "UCI HAR Dataset" should be in the current working directory, containing accelerometer data from a number of subjects. A zip of this data is available from https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip.
+output: One tidy data file is produced - for each subject and activity combination a list of the mean of each measurement.  
 ## Dependencies
 This script loads and uses the following additional packages:  
 * dplyr, 0.4.3 or later
 * data.table, 1.9.4 or later 
-* reshape2, 1.4.1 or later
+* reshape2, 1.4.1 or later  
 ## Interpretation of 'Tidy Data' for this Project
 Tidy data is 
 *Column Names are meaningful*: the data is scientific, the measurement names provided in the features file are appropriate for scientific use and are more meaningful than the original column names V1, V2... V561.  
@@ -20,14 +22,12 @@ Tidy data is
 ### Raw Source Data
 Source data is contained in a directory structure, the top level is named "UCI HAR Dataset".  
 The structure includes a number of subdirectories and files:  
-file/directory      | description
-------------------- | ---------------------------------------------------------
-\test               | a directory containing the test data set (see below)
-\train              | a directory containing the training data set (see below)
-activity_labels.txt | a list of labels used to describe activities, activity data is stored in the test/training data sets using an integer number (1-6), this file contains the corresponding lookup values, i.e. a value of 1 is a 'WALKING' activity. The assignment asks these labels to be substituted for the integers in the target tidy data set.
-features.txt        | a list of 561 measurements made by the sensor
-features_info.txt   | a description of how the measurements were made and how they are structured
-README.txt          | a description of the experimental source of the data, how measurements were made, the directories and files that comprise the data set and information about licensing  
+* \test - a directory containing the test data set (see below)
+* \train - a directory containing the training data set (see below)
+* activity_labels.txt - a list of labels used to describe activities, activity data is stored in the test/training data sets using an integer number (1-6), this file contains the corresponding lookup values, i.e. a value of 1 is a 'WALKING' activity. The assignment asks these labels to be substituted for the integers in the target tidy data set.
+* features.txt - a list of 561 measurements made by the sensor
+* features_info.txt - a description of how the measurements were made and how they are structured
+* README.txt - a description of the experimental source of the data, how measurements were made, the directories and files that comprise the data set and information about licensing  
 Measurements were made for a number of subjects. The measures were divided into two sets - a test data set and a training data set, each set has its own subdirectory - \test and \train, and they contain further subdirectories and files. The \test and \train directories have identical structures, the table below describes the \test directory contents, however it is applicable to \train as well, just substitute file names using '_test' with '_train':  
 file/directory      | description
 ------------------- | ---------------------------------------------------------

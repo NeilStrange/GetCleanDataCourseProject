@@ -5,6 +5,7 @@ CodeBook.md
 This project prepares a tidy data set, from a specific set of input data that contains smartphone accelerometer data from 30 individuals.  
 
 **author**: Neil Strange  
+
 **date**: 21.Sep.2015  
 
 **input**: A subdirectory of source data: "UCI HAR Dataset" should be in the current working directory, containing accelerometer data from a number of subjects. A zip of this data is available from https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip.  
@@ -21,8 +22,10 @@ This script loads and uses the following additional packages:
 Data is considered tidy if it
 
 *Columns are named and the names are meaningful*: the data is scientific, the measurement names provided in the features file are appropriate for scientific use and are more meaningful than the original column names V1, V2... V561.  
+
 *Coded Values are Substituted for codes*: where activity codes 1..6 were used these are replaced with the corresponding strings set out in the activity_labels file, where 1 = WALKING, 2 = WALKING_UPSTAIRS, etc.  
-*One measure per row*: the original data contains multiple measure columns (561 columns of measures, reduced to 85 of interest), these can be reduced to two columns: variable and value, note that - in order not to lose the fact that a number of measures were made at the same time, an extra column is added 'observation number' before melting the data set to retain the linkage between different observed measures.
+
+*There is one measure per row*: the original data contains multiple measure columns (561 columns of measures, reduced to 85 of interest), these can be reduced to two columns: variable and value, note that - in order not to lose the fact that a number of measures were made at the same time, an extra column is added 'observation number' before melting the data set to retain the linkage between different observed measures.
 
 ## Data Processing
 ### Raw Source Data
@@ -45,37 +48,40 @@ Measurements were made for a number of subjects. The measures were divided into 
 
 ### Processing Steps
 The script contains a number of steps:  
-step 1 - initial preparation
-This step verifies the working directory contains the data set and saves environment variables so they can be reset on exit.
+**step 1 - initial preparation**
+* This step verifies the working directory contains the data set
+* It also saves the current working directory so it can be reset on exit.
 
-step 2 - read in the X_% data files
-Keep the files separate until they are ready to be merged.
+step 2 - read in the X_% data files  
+* Keep the files separate until they are ready to be merged.
 
-step 3 - rename the data file columns
-Use a more user-friendly set of names taken from the features.txt file
+step 3 - rename the data file columns  
+* Use a more user-friendly set of names taken from the features.txt file
 
-step 4 - append the y_% activity data
-Create a new column in X_% and column bind the y_% activity data. Replace activity codes with the activity labels to make them readable.
+step 4 - append the y_% activity data  
+* Create a new column in X_% and column bind the y_% activity data. Replace activity codes with the activity labels to make them readable.
 
-step 5 - append the subject_% data
-Create a new column in X_% and column bind the subject_% data.
+step 5 - append the subject_% data  
+* Create a new column in X_% and column bind the subject_% data.
 
-step 6 - merge the test and training data sets
-Merge the data sets into X_data holding the combined set.
+step 6 - merge the test and training data sets  
+* Merge the data sets into X_data holding the combined set.
 
-step 7 drop any non-mean or non-standard deviation measures
-Build a logical vector that indicates if a feature includes the text fragments 'mean' or 'std' use the logical vector to drop any columns we don't need, note that columns 1-2 contain subject and activity data and are also retained. This reduces the 561 measurement columns down to 87.
+step 7 drop any non-mean or non-standard deviation measures  
+* Build a logical vector that indicates if a feature includes the text fragments 'mean' or 'std' use the logical vector to drop any columns we don't need, note that columns 1-2 contain subject and activity data and are also retained. This reduces the 561 measurement columns down to 87.
 
-step 8 - melt the data set, reduce 87 measurement columns to a variable and value column.
-Each row contains 87 measures plus a subject and activity column. One row is in place for each measurement. To retain the linkage between a measurement and the 87 measures prepend an index to the data set before melting, this index identifies the particular measurement, ensuring it isn't lost, and allows original data to be reconstructed.
+step 8 - melt the data set, reduce 87 measurement columns to a variable and value column  
+* Each row contains 87 measures plus a subject and activity column. One row is in place for each measurement. To retain the linkage between a measurement and the 87 measures prepend an index to the data set before melting, this index identifies the particular measurement, ensuring it isn't lost, and allows original data to be reconstructed.
 
-step 9 - calculate means for each measure by subject and activity
+step 9 - calculate means for each measure by subject and activity  
+* 
 
-step 10 - print the tidy data set 
-Print the results to a file "tidy_data.txt" with row.name = FALSE
+step 10 - print the tidy data set   
+* Print the results to a file "tidy_data.txt" using write.table()
+* Use the row.name = FALSE setting
 
-step 11 - restore the environment
-Reset the environment to where it was when the script started.
+step 11 - restore the environment  
+* Reset the environment to where it was when the script started.
 
 
 ## Description of Variables

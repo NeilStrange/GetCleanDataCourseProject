@@ -12,20 +12,20 @@ This project prepares a tidy data set, from a specific set of input data that co
 
 **output**: One tidy data file is produced - for each subject and activity combination a list of the mean of each measurement.  
 
-## Dependencies
+## Package Dependencies
 This script loads and uses the following additional packages:  
 * dplyr, 0.4.3 or later
 * data.table, 1.9.4 or later 
 * reshape2, 1.4.1 or later  
 
 ## Interpretation of 'Tidy Data' for this Project
-Data is considered tidy if it
+Data is considered tidy if it meets a number of criteria. 
 
-*Columns are named and the names are meaningful*: the data is scientific, the measurement names provided in the features file are appropriate for scientific use and are more meaningful than the original column names V1, V2... V561.  
+* *Columns are named and the names are meaningful*: the data is scientific, the measurement names provided in the features file are appropriate for scientific use and are more meaningful than the original column names V1, V2... V561.  
 
-*Coded Values are Substituted for codes*: where activity codes 1..6 were used these are replaced with the corresponding strings set out in the activity_labels file, where 1 = WALKING, 2 = WALKING_UPSTAIRS, etc.  
+* *Coded Values are Substituted for codes*: where activity codes 1..6 were used these are replaced with the corresponding strings set out in the activity_labels file, where 1 = WALKING, 2 = WALKING_UPSTAIRS, etc.  
 
-*There is one measure per row*: the original data contains multiple measure columns (561 columns of measures, reduced to 85 of interest), these can be reduced to two columns: variable and value, note that - in order not to lose the fact that a number of measures were made at the same time, an extra column is added 'observation number' before melting the data set to retain the linkage between different observed measures.
+* *There is one measure per row*: the original data contains multiple measure columns (561 columns of measures, reduced to 85 of interest), these can be reduced to two columns: variable and value, note that - in order not to lose the fact that a number of measures were made at the same time, an extra column is added 'observation number' before melting the data set to retain the linkage between different observed measures.
 
 ## Data Processing
 ### Raw Source Data
@@ -48,39 +48,60 @@ Measurements were made for a number of subjects. The measures were divided into 
 
 ### Processing Steps
 The script contains a number of steps:  
+
 **step 1 - initial preparation**
-* This step verifies the working directory contains the data set
-* It also saves the current working directory so it can be reset on exit.
+* This step verifies the working directory contains the required data set and stops with an error message if not.
+* It saves the current working directory so it can be reset on exit.
+* It sets some variables that store the subdirectory location for the test, train and features data sets.
 
-step 2 - read in the X_% data files  
-* Keep the files separate until they are ready to be merged.
+**step 2 - read in the X_test/train data files**  
+* Read in the files as comma separated data sets.
+* Each is located in its own subdirectory so use the pre-set subdirectory values to locate the files.
+* Keep them in separate data frames for processing before they are merged.
+* The data frames are x_test and x_train.
 
-step 3 - rename the data file columns  
-* Use a more user-friendly set of names taken from the features.txt file
+**step 3 - rename the x_test/x_train data frame columns to use more readable names**  
+* The raw data uses column names 'V1', V2', ... 'V561'. These do not explain what the columns represent.
+* The features file contains a mapping of column names suitable for an engineer to use, e.g. tBodyAcc-mean-X, meaning a measure of mean body acceleration in the X direction measured over a time frame.
+* Replace the column names with the set of names taken from the features.txt file.
+* Read in the features file as a vector, storing what will become the new column names.
+* Pre-process the features vector to remove (), as these are not suitable for column names, also convert '-' and ',' characters to '_'.
+* Use the setnames() function to set both the x_test and x_train data frame column names to the features vector.
 
-step 4 - append the y_% activity data  
-* Create a new column in X_% and column bind the y_% activity data. Replace activity codes with the activity labels to make them readable.
+**step 4 - append the y_test/y_train activity data**  
+* The y_test and Y_train files contain information about the activities being performed when the X-test and x_train measures were taken.
+* The y_test and y_train data sets contain the same number of rows as the x_test and x_train data sets, each row in y_test and y_train corresponds to the same number row in x_test and x_train.
+* Read the y_test and y_train data sets into data frames.
+* Each is located in its own subdirectory so use the pre-set subdirectory values to locate the files.
+* The raw activity data uses a numeric code 1:6.
+* There are textual explanations of each code (in the activity_labels.txt file), 1 = WALKING, 2 = WALKING_UPSTAIRS, etc.
+* Replace the raw activity codes with the activity labels to make them readable:
+    + assemble the code explanations in its own vector - activity_code
+    + loop through y_test and y_train replacing each code with its explanation value
+    + hold the results in new vectors y_test_activities and y_train_activities
+* Create new columns in x_test and x_train by column binding the y_test_activities and y_train_activities data
+* name the new columns 'Activity'
 
-step 5 - append the subject_% data  
+**step 5 - append the subject_test and subject_train data**
 * Create a new column in X_% and column bind the subject_% data.
 
-step 6 - merge the test and training data sets  
+**step 6 - merge the test and training data sets**
 * Merge the data sets into X_data holding the combined set.
 
-step 7 drop any non-mean or non-standard deviation measures  
+**step 7 drop any non-mean or non-standard deviation measures**
 * Build a logical vector that indicates if a feature includes the text fragments 'mean' or 'std' use the logical vector to drop any columns we don't need, note that columns 1-2 contain subject and activity data and are also retained. This reduces the 561 measurement columns down to 87.
 
-step 8 - melt the data set, reduce 87 measurement columns to a variable and value column  
+**step 8 - melt the data set, reduce 87 measurement columns to a variable and value column**
 * Each row contains 87 measures plus a subject and activity column. One row is in place for each measurement. To retain the linkage between a measurement and the 87 measures prepend an index to the data set before melting, this index identifies the particular measurement, ensuring it isn't lost, and allows original data to be reconstructed.
 
-step 9 - calculate means for each measure by subject and activity  
+**step 9 - calculate means for each measure by subject and activity**
 * 
 
-step 10 - print the tidy data set   
+**step 10 - print the tidy data set** 
 * Print the results to a file "tidy_data.txt" using write.table()
 * Use the row.name = FALSE setting
 
-step 11 - restore the environment  
+**step 11 - restore the environment**
 * Reset the environment to where it was when the script started.
 
 
@@ -187,6 +208,7 @@ angleZ,gravityMean
 
 ## Sources
 
+1. Tidy Data, Hadley Wickham, Journal of Statistical Software
 
 
 

@@ -55,10 +55,9 @@ Measurements were made for a number of subjects. The measures were divided into 
 ### Target Data
 The script produces a file 'tidy_data.txt' as output. This is a print out of a data frame 'x_cast' holding the results of the tidy operations. In addition, the script creates a more detailed data frame, x_data_melt that holds the lower level data set from which x_cast is calculated. Both x_cast and x_data_melt are available in the environment for the user on completion of the script.
 
-Descriptions:
-**x_cast** - is a summary data set holding the mean of each measurement's values for each subject and activity combination, x_cast is printed by the script as a tidy_data.txt file.
+**x_cast / tidy_data.txt** - is a summary data set holding the mean of each measurement's values for each subject and activity combination, x_cast is printed by the script as a tidy_data.txt file.
 
-x_cast is a data frame, 88 columns wide, 180 rows (all combinations of 6 activities x 30 subjects).
+x_cast / tidy_data.txt is a data frame, 88 columns wide, 180 rows (all combinations of 6 activities x 30 subjects).
 
 It has the following columns:
 * Subject: integer, in the range 1:30, identifying the person who was the subject of the measurement

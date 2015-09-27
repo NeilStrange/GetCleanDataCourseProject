@@ -150,9 +150,7 @@ library(reshape2)
 
   # make the subject test column name readable
   setnames(subject_test, old=c("V1"), new=c("Subject"))
-  subjects <- unique(rbind(subject_train, subject_test))
-  subjects <- sort(subjects$Subject)
-  
+ 
   # append the test and training subject data sets to their corresponding 
   # x data set
   x_test  <- cbind(subject_test,  x_test,  stringsAsFactors = FALSE)
@@ -224,7 +222,7 @@ library(reshape2)
 
   # create a second, independent tidy data set with the average of 
   # each variable for each activity and each subject.
-  x_cast <- dcast(x_data_melt, Subject + Activity  ~ variable, mean)
+  x_tidy_data <- dcast(x_data_melt, Subject + Activity  ~ variable, mean)
 
   
 #------------------------------------------------------------------------------  
@@ -233,7 +231,7 @@ library(reshape2)
   
   # create a tidy_data.txt file
   setwd(old.wd)
-  write.table(x_cast, file = "tidy_data.txt", row.name = FALSE) 
+  write.table(x_tidy_data, file = "tidy_data.txt", row.name = FALSE) 
               
               
 #------------------------------------------------------------------------------

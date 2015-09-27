@@ -154,11 +154,11 @@ The script contains a number of steps:
 **step 9 - calculate means for each measure by subject and activity**
 * The dcast() function works with melt() data sets to calculate this data.
 * Make 'Subject' and 'Activity' indexes of the calculation.
-* Call dcast() with the function 'mean' and store the result in 'x_cast' data frame.
+* Call dcast() with the function 'mean' and store the result in 'x_tidy_data' data frame.
 * 
 
 **step 10 - print the tidy data set** 
-* Print the results to a file "tidy_data.txt" using write.table()
+* Print the x_tidy_data results to a file "tidy_data.txt" using write.table()
 * Use the row.name = FALSE setting
 
 **step 11 - restore the environment**
@@ -166,11 +166,13 @@ The script contains a number of steps:
 
 
 ## Description of Variable Columns
+Variable columns are present in the output "tidy_data.txt", and script data frames "tidy_data" and x_data_melt. These are tidied up input measures that contain mean and standard deviation data, i.e. any variable name containing the text fragments "mean" or "std". There are 86 mean and standard deviation variables in total.
 
-* Subject: a number referencing the subject (person) being measured (range 1:30)
-* Activity: the name of the activity being performed by the subject
+tidy_data uses the variable names across columns 3:88, x_data_melt was created by applying the melt() function to reduce the variable set to two columns - 'variable' and 'value' holding the variable name and corresponding measure. One row in tidy_data will correspond to 86 rows in x_data_melt.
 
-* Body Acceleration data, measured over a time frame:
+The variables are described in more detail in the **Code Book**, however they include mean and standard deviation (Std) data in x, y, and z coordinate directions for:
+
+* Body Acceleration data(columns 3:8):
    + tBodyAcc-mean-X
    + tBodyAcc-mean-Y
    + tBodyAcc-mean-Z
@@ -178,7 +180,7 @@ The script contains a number of steps:
    + tBodyAcc-std-Y
    + tBodyAcc-std-Z
 
-* Gravity acceleration data, measured over a time frame:   
+* Gravity acceleration data(columns 9:14):   
    + tGravityAcc-mean-X
    + tGravityAcc-mean-Y
    + tGravityAcc-mean-Z
@@ -186,7 +188,7 @@ The script contains a number of steps:
    + tGravityAcc-std-Y
    + tGravityAcc-std-Z
 
-* Body jerk acceleration, measured over a time frame:
+* Body jerk acceleration data(columns 15:20):
    + tBodyAccJerk-mean-X
    + tBodyAccJerk-mean-Y
    + tBodyAccJerk-mean-Z
@@ -194,7 +196,7 @@ The script contains a number of steps:
    + tBodyAccJerk-std-Y
    + tBodyAccJerk-std-Z
 
-* Body gyro-meaurements over a time frame:
+* Body gyro-meaurements data(columns 21:26):
    + tBodyGyro-mean-X
    + tBodyGyro-mean-Y
    + tBodyGyro-mean-Z
@@ -202,7 +204,7 @@ The script contains a number of steps:
    + tBodyGyro-std-Y
    + tBodyGyro-std-Z
 
-* Body gyro-jerk measurements over a time frame:
+* Body gyro-jerk measurements over a time frame(columns 27:32):
    + tBodyGyroJerk-mean-X
    + tBodyGyroJerk-mean-Y
    + tBodyGyroJerk-mean-Z
@@ -210,70 +212,98 @@ The script contains a number of steps:
    + tBodyGyroJerk-std-Y
    + tBodyGyroJerk-std-Z
 
-   
-* tBodyAccMag-mean
-* tBodyAccMag-std
-* tGravityAccMag-mean
-* tGravityAccMag-std
+* Body acceleration magnitude (Euclidean norm of x, y, z measures) (columns 33:36):
+   + tBodyAccMag-mean
+   + tBodyAccMag-std
+   + tGravityAccMag-mean
+   + tGravityAccMag-std
 
-* tBodyAccJerkMag-mean
-* tBodyAccJerkMag-std
+* Body jerk magnitude (Euclidean norm of x, y, z measures) (columns 37:38):
+   + tBodyAccJerkMag-mean
+   + tBodyAccJerkMag-std
 
-* tBodyGyroMag-mean
-* tBodyGyroMag-std
+* Body gyro magnitude (Euclidean norm of x, y, z measures)(columns 39:40):
+   + tBodyGyroMag-mean
+   + tBodyGyroMag-std
 
-* tBodyGyroJerkMag-mean
-* tBodyGyroJerkMag-std
+* Body gyro jerk magnitude (Euclidean norm of x, y, z measures)(columns 41:42):
+   + tBodyGyroJerkMag-mean
+   + tBodyGyroJerkMag-std
 
-* fBodyAcc-mean-X
-* fBodyAcc-mean-Y
-* fBodyAcc-mean-Z
-* fBodyAcc-std-X
-* fBodyAcc-std-Y
-* fBodyAcc-std-Z
+* Fourier transform of body acceleration(columns 43:48):
+   + fBodyAcc-mean-X
+   + fBodyAcc-mean-Y
+   + fBodyAcc-mean-Z
+   + fBodyAcc-std-X
+   + fBodyAcc-std-Y
+   + fBodyAcc-std-Z
 
-* fBodyAcc-meanFreq-X
-* fBodyAcc-meanFreq-Y
-* fBodyAcc-meanFreq-Z
+* Fourier transform of body acceleration, mean frequency(columns 49:51):
+   + fBodyAcc-meanFreq-X
+   + fBodyAcc-meanFreq-Y
+   + fBodyAcc-meanFreq-Z
 
-* fBodyAccJerk-mean-X
-* fBodyAccJerk-mean-Y
-* fBodyAccJerk-mean-Z
+* Fourier transform of body acceleration jerk(columns 52:57):
+   + fBodyAccJerk-mean-X
+   + fBodyAccJerk-mean-Y
+   + fBodyAccJerk-mean-Z
+   + fBodyAccJerk-std-X
+   + fBodyAccJerk-std-Y
+   + fBodyAccJerk-std-Z
 
-* fBodyAccJerk-std-X
-* fBodyAccJerk-std-Y
-* fBodyAccJerk-std-Z
-* fBodyAccJerk-meanFreq-X
-* fBodyAccJerk-meanFreq-Y
-* fBodyAccJerk-meanFreq-Z
+* Fourier transform of body acceleration jerk, mean frequency(columns 58:60):
+   + fBodyAccJerk-meanFreq-X
+   + fBodyAccJerk-meanFreq-Y
+   + fBodyAccJerk-meanFreq-Z
 
-* fBodyGyro-mean-X
-* fBodyGyro-mean-Y
-* fBodyGyro-mean-Z
-* fBodyGyro-std-X
-* fBodyGyro-std-Y
-* fBodyGyro-std-Z
-* fBodyGyro-meanFreq-X
-* fBodyGyro-meanFreq-Y
-* fBodyGyro-meanFreq-Z
-* fBodyAccMag-mean
-* fBodyAccMag-std
-* fBodyAccMag-meanFreq
-* fBodyBodyAccJerkMag-mean
-* fBodyBodyAccJerkMag-std
-* fBodyBodyAccJerkMag-meanFreq
-* fBodyBodyGyroMag-mean
-* fBodyBodyGyroMag-std
-* fBodyBodyGyroMag-meanFreq
-* fBodyBodyGyroJerkMag-mean
-* fBodyBodyGyroJerkMag-std
-* fBodyBodyGyroJerkMag-meanFreq
-* angletBodyAccJerkMean,gravityMean
-* angletBodyGyroMean,gravityMean
-* angletBodyGyroJerkMean,gravityMean
-* angleX,gravityMean
-* angleY,gravityMean
-* angleZ,gravityMean
+* Fourier transform of body gyro (columns 61:66):
+   + fBodyGyro-mean-X
+   + fBodyGyro-mean-Y
+   + fBodyGyro-mean-Z
+   + fBodyGyro-std-X
+   + fBodyGyro-std-Y
+   + fBodyGyro-std-Z
+
+* Fourier transform of body gyro, mean frequency (columns 67:69):
+   + fBodyGyro-meanFreq-X
+   + fBodyGyro-meanFreq-Y
+   + fBodyGyro-meanFreq-Z
+
+* Fourier transform of body acceleration magnitude (columns 70:71):
+   + fBodyAccMag-mean
+   + fBodyAccMag-std
+
+* Fourier transform of body acceleration magnitude, mean frequency (column 72):
+   + fBodyAccMag-meanFreq
+
+* Fourier transform of body acceleration jerk magnitude (columns 73:75):
+   + fBodyBodyAccJerkMag-mean
+   + fBodyBodyAccJerkMag-std
+   + fBodyBodyAccJerkMag-meanFreq
+
+* Fourier transform of body gyro jerk magnitude (columns 76:77):
+   + fBodyBodyGyroMag-mean
+   + fBodyBodyGyroMag-std
+
+* Fourier transform of body gyro magnitude, mean frequency (column 78):
+   + fBodyBodyGyroMag-meanFreq
+
+* Fourier transform of body gyro jerk magnitude (columns 79:80):
+   + fBodyBodyGyroJerkMag-mean
+   + fBodyBodyGyroJerkMag-std
+
+* Fourier transform of body gyro jerk magnitude, mean frequency (column 81):
+   + fBodyBodyGyroJerkMag-meanFreq
+
+* Body acceleration gyro, jerk and gravity mean(columns 82:84):
+   + angletBodyAccJerkMean,gravityMean
+   + angletBodyGyroMean,gravityMean
+   + angletBodyGyroJerkMean,gravityMean
+
+* Angle gravity mean(columns 85:87):
+   + angleX,gravityMean
+   + angleY,gravityMean
+   + angleZ,gravityMean
 
 ## Sources
 

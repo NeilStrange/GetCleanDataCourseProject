@@ -33,7 +33,10 @@ For this project, the following rules have been applied:
 
 * *Coded Values are Substituted for codes*: where activity codes 1..6 were used these are replaced with the corresponding strings set out in the activity_labels file, where 1 = WALKING, 2 = WALKING_UPSTAIRS, etc.  
 
-* *There is one measure per row*: the original data contains multiple measure columns (561 columns of measures, reduced to 85 of interest - mean or standard deviation), these can be reduced to two columns: variable and value, note that - in order not to lose the fact that a number of measures were made at the same time, an extra column is added 'observation number' before melting the data set to retain the linkage between different observed measures.
+* *There is one measure per row*: the original data contains multiple measure columns (561 columns of measures, reduced to 86 of interest - mean or standard deviation).
+   + within the script, these are reduced to two columns using melt(): 'variable' and 'value'
+   + note that - in order not to lose the fact that a number of measures were made at the same time, an extra column is added 'observation number' before melting the data set to retain the linkage between different observed measures
+   + within the tidy_data data set these are rendered as 86 columns, one row for each combination of subject and activity (30 subjects x 6 activities = 180 rows), this arrangement is used as the data is processed, i.e. derived as the mean of observations for that combination of subject and activity, as the data is processed it is no longer an observation and so results are kept as one row per combined subject and activity
 
 ## Data Processing
 ### Raw Source Data

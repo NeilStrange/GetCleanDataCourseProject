@@ -2,34 +2,190 @@ CodeBook.Rmd
 # Code Book
 ***
 
-This code book describes the variables used 
+This code book describes the variables used within the run_analysis.R script, within the tidy_data and the x_data_melt data frames, and 
 
 **Tidy_Data.txt**
 
-# Variables Used in the Script
+## Variables Used in the Script
 **data_dir**:           character, holds the directory path of the data (UCI HAR Dataset)  
 **test_dir**:           character, holds the directory path of the test data set  
 **train_dir**:          character, holds the directory path of the test data set  
 **old.wd**:             character, holds the directory path of the working directory when the script was called, so it can be reset on exit    
 
-**x_train**:            data frame, initially holds the x_train.txt data set, it is morphed as the script runs through cleaning, adding activity_code and subject data (see below) before it is merged with x_test  
-**x_test**:             data frame, initially holds the x_test.txt data set, it is morphed as the script runs through cleaning, adding activity_code and subject data (see below) before it is merged with x_train  
+**x_train**:            data frame, initially holds the x_train.txt data set, it is morphed as the script runs through cleaning, adding activity_code and subject data (see below) before it is merged with x_test, x_train has 561 variable columns, of which only 86 are of interest, the columns of interest are listed in the keep vector and described in the 'columns in tidy_data' section below  
+**x_test**:             data frame, initially holds the x_test.txt data set, it is morphed as the script runs through cleaning, adding activity_code and subject data (see below) before it is merged with x_train, x_test has 561 variable columns, of which only 86 are of interest, the columns of interest are listed in the keep vector and described in the 'columns in tidy_data' section below  
 **old_x_names**:        character vector, temporary, holds the names used in x_train and x_test  
-**features**:           character vector, temporary, holds the values stored in features.txt and used to rename the measurement columns in x_test and x_train, features contains a list of measurement names of all measures made in the x_train and x_test data sets, this vector is tidied up in the script to make it suitable for use as a column name before it is applied: "()" are removed, "," is replaced with "_", and "-" is replaced with "_"  
+**features**:           character vector, temporary, holds the values stored in features.txt and used to rename the measurement columns in x_test and x_train, features contains a list of measurement names of all measures made in the x_train and x_test data sets, this vector is tidied up in the script to make it suitable for use as a column name before it is applied: "()" are removed, "," is replaced with "/_", and "-" is replaced with "/_"  
 
-**activity_code**:      character vector, temporary, holds lookup values of the six activity descriptions  
-**y_train**:            data frame, used to hold the y_train.txt file data, there is one row in y_train corresponding to each row in x_train  
-**y_train_activities**: character vector, holds the result of y_train converted from integers 1:6 to character values held in activity_code, values 1 are replaced with "WALKING", etc.
-**y_test**:             data frame, used to hold the y_train.txt file data, there is one row in y_test corresponding to each row in x_test
-**y_test_activities**:  character vector, holds the result of y_test converted from integers 1:6 to character values held in activity_code, values 1 are replaced with "WALKING", etc.
+**activity_code**:      character vector, temporary, holds lookup values of the six activity descriptions (1: WALKING, 2: WALKING_UPSTAIRS, 3: WALKING_DOWNSTAIRS, 4: SITTING, 5 STANDING, 6: LAYING)  
+**y_train**:            data frame, used to hold the y_train.txt file data, there is one row in y_train corresponding to each row in x_train, y_train contains the integers 1:6 describing the activity being carried out when a measurement (in x_train) was made (see activity code for the meaning of the integer)  
+**y_train_activities**: character vector, holds the result of y_train converted from integers 1:6 to character values held in activity_code, values 1 are replaced with "WALKING", etc.  
+**y_test**:             data frame, used to hold the y_train.txt file data, there is one row in y_test corresponding to each row in x_test, y_test contains the integers 1:6 describing the activity being carried out when a measurement (in x_test) was made (see activity code for the meaning of the integer)  
+**y_test_activities**:  character vector, holds the result of y_test converted from integers 1:6 to character values held in activity_code, values 1 are replaced with "WALKING", etc.  
 
-**subject_train**:      
-**subject_test**:
-**subjects**:
+**subject_train**:      data frame, used to hold the subject_train.txt file data, there is one row in subject_train corresponding to each row in x_train  
+**subject_test**:       data frame, used to hold the subject_test.txt file data, there is one row in subject_test corresponding to each row in x_test  
+**x_data**:             data frame, holds the combined x_train and x_test data sets  
+**cols**:               character vector, temporary, holds the names of the x_data columns  
+**cols_upp**:           character vector, temporary, holds the same values as cols but converted all to upper case, used to make character comparisons easier  
+**keep**:               logical vector, temporary, this is assembled to hold TRUE if cols_upp contains the text fragments 'MEAN' or 'STD', FALSE otherwise, keep is applied to x_data to subset the columns down to those we need to process, those that hold mean or standard deviation data only  
+**observation_number**: numeric vector, temporary, incremental index, each row of x_data is a separate observation, when x_data is melted we need to keep a record of the observation each measure originally belonged to, observation_number is an index (1, 2, 3, ... for nrow in x_data) to be appended to x_data before melt() is applied  
+**x_data_melt**:        data frame, final tidied data set, containing information about all measurements made - see description below
+**x_tidy_data**:        data frame, final small tidy data set containing the mean of each measurement for each combination of subject and activity
 
-**cols**:
-**cols_upp**:
-**keep**:
-**observation_number**:
-**x_data_melt**:
-**x_data_tidy**:
+## Tidy_Data structure
+Tidy_data has 88 columns.
+
+Column 1 contains the Subject of the measurements (the person who is the subject of the measures), this is an integer 1:30.
+
+Column 2 contains the Activity performed, one of six values from WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING.
+
+Columns 3:88 contain the mean of each of the 86 measures for each combination of Subject and Activity (30 x 6 = 180 rows). These 86 measures are those that contain mean and standard deviation data, i.e. any variable name in the input files containing the text fragments "mean" or "std". 
+
+**Units of measure: all columns 3:88 are normalised and bounded within -1 to +1.**
+
+* Body Acceleration data(columns 3:8):
+   + tBodyAcc-mean-X
+   + tBodyAcc-mean-Y
+   + tBodyAcc-mean-Z
+   + tBodyAcc-std-X
+   + tBodyAcc-std-Y
+   + tBodyAcc-std-Z
+
+* Gravity acceleration data(columns 9:14):   
+   + tGravityAcc-mean-X
+   + tGravityAcc-mean-Y
+   + tGravityAcc-mean-Z
+   + tGravityAcc-std-X
+   + tGravityAcc-std-Y
+   + tGravityAcc-std-Z
+
+* Body jerk acceleration data(columns 15:20):
+   + tBodyAccJerk-mean-X
+   + tBodyAccJerk-mean-Y
+   + tBodyAccJerk-mean-Z
+   + tBodyAccJerk-std-X
+   + tBodyAccJerk-std-Y
+   + tBodyAccJerk-std-Z
+
+* Body gyro-meaurements data(columns 21:26):
+   + tBodyGyro-mean-X
+   + tBodyGyro-mean-Y
+   + tBodyGyro-mean-Z
+   + tBodyGyro-std-X
+   + tBodyGyro-std-Y
+   + tBodyGyro-std-Z
+
+* Body gyro-jerk measurements over a time frame(columns 27:32):
+   + tBodyGyroJerk-mean-X
+   + tBodyGyroJerk-mean-Y
+   + tBodyGyroJerk-mean-Z
+   + tBodyGyroJerk-std-X
+   + tBodyGyroJerk-std-Y
+   + tBodyGyroJerk-std-Z
+
+* Body acceleration magnitude (Euclidean norm of x, y, z measures) (columns 33:36):
+   + tBodyAccMag-mean
+   + tBodyAccMag-std
+   + tGravityAccMag-mean
+   + tGravityAccMag-std
+
+* Body jerk magnitude (Euclidean norm of x, y, z measures) (columns 37:38):
+   + tBodyAccJerkMag-mean
+   + tBodyAccJerkMag-std
+
+* Body gyro magnitude (Euclidean norm of x, y, z measures)(columns 39:40):
+   + tBodyGyroMag-mean
+   + tBodyGyroMag-std
+
+* Body gyro jerk magnitude (Euclidean norm of x, y, z measures)(columns 41:42):
+   + tBodyGyroJerkMag-mean
+   + tBodyGyroJerkMag-std
+
+* Fourier transform of body acceleration(columns 43:48):
+   + fBodyAcc-mean-X
+   + fBodyAcc-mean-Y
+   + fBodyAcc-mean-Z
+   + fBodyAcc-std-X
+   + fBodyAcc-std-Y
+   + fBodyAcc-std-Z
+
+* Fourier transform of body acceleration, mean frequency(columns 49:51):
+   + fBodyAcc-meanFreq-X
+   + fBodyAcc-meanFreq-Y
+   + fBodyAcc-meanFreq-Z
+
+* Fourier transform of body acceleration jerk(columns 52:57):
+   + fBodyAccJerk-mean-X
+   + fBodyAccJerk-mean-Y
+   + fBodyAccJerk-mean-Z
+   + fBodyAccJerk-std-X
+   + fBodyAccJerk-std-Y
+   + fBodyAccJerk-std-Z
+
+* Fourier transform of body acceleration jerk, mean frequency(columns 58:60):
+   + fBodyAccJerk-meanFreq-X
+   + fBodyAccJerk-meanFreq-Y
+   + fBodyAccJerk-meanFreq-Z
+
+* Fourier transform of body gyro (columns 61:66):
+   + fBodyGyro-mean-X
+   + fBodyGyro-mean-Y
+   + fBodyGyro-mean-Z
+   + fBodyGyro-std-X
+   + fBodyGyro-std-Y
+   + fBodyGyro-std-Z
+
+* Fourier transform of body gyro, mean frequency (columns 67:69):
+   + fBodyGyro-meanFreq-X
+   + fBodyGyro-meanFreq-Y
+   + fBodyGyro-meanFreq-Z
+
+* Fourier transform of body acceleration magnitude (columns 70:71):
+   + fBodyAccMag-mean
+   + fBodyAccMag-std
+
+* Fourier transform of body acceleration magnitude, mean frequency (column 72):
+   + fBodyAccMag-meanFreq
+
+* Fourier transform of body acceleration jerk magnitude (columns 73:75):
+   + fBodyBodyAccJerkMag-mean
+   + fBodyBodyAccJerkMag-std
+   + fBodyBodyAccJerkMag-meanFreq
+
+* Fourier transform of body gyro jerk magnitude (columns 76:77):
+   + fBodyBodyGyroMag-mean
+   + fBodyBodyGyroMag-std
+
+* Fourier transform of body gyro magnitude, mean frequency (column 78):
+   + fBodyBodyGyroMag-meanFreq
+
+* Fourier transform of body gyro jerk magnitude (columns 79:80):
+   + fBodyBodyGyroJerkMag-mean
+   + fBodyBodyGyroJerkMag-std
+
+* Fourier transform of body gyro jerk magnitude, mean frequency (column 81):
+   + fBodyBodyGyroJerkMag-meanFreq
+
+* Body acceleration gyro, jerk and gravity mean(columns 82:84):
+   + angletBodyAccJerkMean,gravityMean
+   + angletBodyGyroMean,gravityMean
+   + angletBodyGyroJerkMean,gravityMean
+
+* Angle gravity mean(columns 85:87):
+   + angleX,gravityMean
+   + angleY,gravityMean
+   + angleZ,gravityMean
+
+## x_data_melt structure
+
+x_data _melt is a narrow data set holding lower level data for all mean and standard deviation measurements used in calculating the tidy_data data set. It is a data frame, 5 columns wide, with 885,714 rows. As it was created with the melt() function it has only one measurement per row.
+
+It has the following columns:
+* observation_number: integer (1:10,299), the row number from the original merged training and test data set of 10,299 observations (rows) identifying the observation set the value belongs to
+* Subject: integer, in the range 1:30, identifying the person who was the subject of the measurement
+* Activity, character, one of 6 values (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING)
+* variable: character, the name of a variable, one of 86 measurements (see below for the list of variables)
+* value: numeric, the value of that variable, all values are in the range -1 to +1, having been normalised
+
+

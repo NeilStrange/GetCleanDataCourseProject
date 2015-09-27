@@ -1,0 +1,34 @@
+CodeBook.Rmd
+# Code Book
+***
+
+This code book describes the variables used 
+
+**Tidy_Data.txt**
+
+data_dir:           character, holds the directory path of the data (UCI HAR Dataset)
+test_dir:           character, holds the directory path of the test data set
+train_dir:          character, holds the directory path of the test data set
+old.wd:             character, holds the directory path of the working directory when the script was called
+
+x_train:            initially holds the x_train.txt data set, it is morphed as the script runs through cleaning until the point where it has had 
+x_test:
+old_x_names
+features
+
+activity_code
+y_train
+y_train_activities
+y_test
+y_test_activities
+
+subject_train
+subject_test
+subjects
+
+cols
+cols_upp
+keep
+observation_number
+x_data_melt
+x_data_tidy

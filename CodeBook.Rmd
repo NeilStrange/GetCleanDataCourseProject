@@ -2,7 +2,7 @@ CodeBook.Rmd
 # Code Book
 ***
 
-This code book describes the variables used within the run_analysis.R script, within the tidy_data and the x_data_melt data frames, and 
+This code book describes the variables used within the run_analysis.R script. It also describes in more detail the formats of tidy_data (the output tidy data file and the name of a corresponding data frame in the script) and of x_data_melt (a set of lower level tidied data used to calculate the tidy_data data set). 
 
 **Tidy_Data.txt**
 

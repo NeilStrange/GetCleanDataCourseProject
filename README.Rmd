@@ -1,5 +1,6 @@
 README.Rmd
 # Course Project, Getting and Cleaning Data
+A description of how the script "run_analysis.R" works.
 ***
 ## Project Description
 This project prepares a tidy data set, from a specific set of input data that contains smartphone accelerometer data from 30 individuals.  

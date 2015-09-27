@@ -54,18 +54,20 @@ Measurements were made for a number of subjects. The measures were divided into 
 * *\Inertial Signals* - a subdirectory holding low-level body accelerator and body gyro data over a number of files, this is too low a level for use in this project and can be ignored  
 
 ### Target Data
-The script produces a file 'tidy_data.txt' as output. This is a print out of a data frame 'x_cast' holding the results of the tidy operations. In addition, the script creates a more detailed data frame, x_data_melt that holds the lower level data set from which x_cast is calculated. Both x_cast and x_data_melt are available in the environment for the user on completion of the script.
+The script produces a file 'tidy_data.txt' as output. This is a print out of a data frame 'x_tidy_data' holding the results of the tidy operations. In addition, the script creates a more detailed data frame, x_data_melt that holds the lower level data set from which x_tidy_data is calculated. Both x_tidy_data and x_data_melt are available in the environment for the user on completion of the script.
 
-**x_cast / tidy_data.txt** - is a summary data set holding the mean of each measurement's values for each subject and activity combination, x_cast is printed by the script as a tidy_data.txt file.
+**x_tidy_data / tidy_data.txt**
 
-x_cast / tidy_data.txt is a data frame, 88 columns wide, 180 rows (all combinations of 6 activities x 30 subjects).
+Is a summary data set holding the mean of each measurement's values for each subject and activity combination, x_tidy_data is printed by the script as a tidy_data.txt file. 
 
-It has the following columns:
+Formatted as a data frame, 88 columns wide, 180 rows (all combinations of 6 activities x 30 subjects) with the following columns:
 * Subject: integer, in the range 1:30, identifying the person who was the subject of the measurement
 * Activity, character, one of 6 values (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING)
-* Columns 3:88, numeric, each column contains data about one variable, the data is the mean of all values for that variable for each subject and activity combination
+* Columns 3:88, numeric, each column contains data about one variable, the data is the mean of all values for that variable for each subject and activity combination (see the code book for details of these columns).
 
-**x_data_melt** - is a narrow tidy data set holding data for all mean and standard deviation measurements.
+**x_data_melt**
+
+Is a narrow tidy data set holding lower level data for all mean and standard deviation measurements, tidied up from the original data set. 
 
 x_data_melt is a data frame, 5 columns wide, with 885,174 rows.
 
@@ -77,7 +79,7 @@ It has the following columns:
 * value: numeric, the value of that variable, all values are in the range -1 to +1, having been normalised
 
 
-## Processing Steps
+## Script: Processing Steps
 The script contains a number of steps:  
 
 **step 1 - initial preparation**
@@ -163,43 +165,52 @@ The script contains a number of steps:
 * Reset the working directory to where it was when the script started.
 
 
-## Description of Variables
+## Description of Variable Columns
 
-* tBodyAcc-mean-X
-* tBodyAcc-mean-Y
-* tBodyAcc-mean-Z
-* tBodyAcc-std-X
-* tBodyAcc-std-Y
-* tBodyAcc-std-Z
+* Subject: a number referencing the subject (person) being measured (range 1:30)
+* Activity: the name of the activity being performed by the subject
 
-* tGravityAcc-mean-X
-* tGravityAcc-mean-Y
-* tGravityAcc-mean-Z
-* tGravityAcc-std-X
-* tGravityAcc-std-Y
-* tGravityAcc-std-Z
+* Body Acceleration data, measured over a time frame:
+   + tBodyAcc-mean-X
+   + tBodyAcc-mean-Y
+   + tBodyAcc-mean-Z
+   + tBodyAcc-std-X
+   + tBodyAcc-std-Y
+   + tBodyAcc-std-Z
 
-* tBodyAccJerk-mean-X
-* tBodyAccJerk-mean-Y
-* tBodyAccJerk-mean-Z
-* tBodyAccJerk-std-X
-* tBodyAccJerk-std-Y
-* tBodyAccJerk-std-Z
+* Gravity acceleration data, measured over a time frame:   
+   + tGravityAcc-mean-X
+   + tGravityAcc-mean-Y
+   + tGravityAcc-mean-Z
+   + tGravityAcc-std-X
+   + tGravityAcc-std-Y
+   + tGravityAcc-std-Z
 
-* tBodyGyro-mean-X
-* tBodyGyro-mean-Y
-* tBodyGyro-mean-Z
-* tBodyGyro-std-X
-* tBodyGyro-std-Y
-* tBodyGyro-std-Z
+* Body jerk acceleration, measured over a time frame:
+   + tBodyAccJerk-mean-X
+   + tBodyAccJerk-mean-Y
+   + tBodyAccJerk-mean-Z
+   + tBodyAccJerk-std-X
+   + tBodyAccJerk-std-Y
+   + tBodyAccJerk-std-Z
 
-* tBodyGyroJerk-mean-X
-* tBodyGyroJerk-mean-Y
-* tBodyGyroJerk-mean-Z
-* tBodyGyroJerk-std-X
-* tBodyGyroJerk-std-Y
-* tBodyGyroJerk-std-Z
+* Body gyro-meaurements over a time frame:
+   + tBodyGyro-mean-X
+   + tBodyGyro-mean-Y
+   + tBodyGyro-mean-Z
+   + tBodyGyro-std-X
+   + tBodyGyro-std-Y
+   + tBodyGyro-std-Z
 
+* Body gyro-jerk measurements over a time frame:
+   + tBodyGyroJerk-mean-X
+   + tBodyGyroJerk-mean-Y
+   + tBodyGyroJerk-mean-Z
+   + tBodyGyroJerk-std-X
+   + tBodyGyroJerk-std-Y
+   + tBodyGyroJerk-std-Z
+
+   
 * tBodyAccMag-mean
 * tBodyAccMag-std
 * tGravityAccMag-mean

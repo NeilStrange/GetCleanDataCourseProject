@@ -6,17 +6,17 @@ This code book describes the variables used
 
 **Tidy_Data.txt**
 
-**data_dir**:           character, holds the directory path of the data (UCI HAR Dataset) 
+**data_dir**:           character, holds the directory path of the data (UCI HAR Dataset)  
 **test_dir**:           character, holds the directory path of the test data set  
 **train_dir**:          character, holds the directory path of the test data set  
-**old.wd**:             character, holds the directory path of the working directory when the script was called  
+**old.wd**:             character, holds the directory path of the working directory when the script was called, so it can be reset on exit    
 
-**x_train**:            initially holds the x_train.txt data set, it is morphed as the script runs through cleaning until the point where it has had 
-**x_test**:
-**old_x_names**:
-**features**:
+**x_train**:            initially holds the x_train.txt data set, it is morphed as the script runs through cleaning, adding activity_code and subject data (see below) before it is merged with x_test  
+**x_test**:             initially holds the x_test.txt data set, it is morphed as the script runs through cleaning, adding activity_code and subject data (see below) before it is merged with x_train  
+**old_x_names**:        temporary vector, holds the names used in x_train and x_test  
+**features**:           temporary_vector, holds the values stored in features.txt and used to rename the measurement columns in x_test and x_train, features contains a list of measurement names of all measures made in the x_train and x_test data sets, this vector is tidied up in the script to make it suitable for use as a column name before it is applied: "()" are removed, "," is replaced with "_", and "-" is replaced with "_"  
 
-**activity_code**:
+**activity_code**:      
 **y_train**:
 **y_train_activities**:
 **y_test**:
